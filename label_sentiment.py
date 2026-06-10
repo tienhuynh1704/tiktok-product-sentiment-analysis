@@ -31,7 +31,10 @@ positive_words = [
     "mê",
     "ưng",
     "hiệu quả",
-    "đáng tiền"
+    "đáng tiền",
+    "rẻ",
+    "ngon",
+    "5 sao"
 ]
 
 negative_words = [
@@ -50,7 +53,9 @@ negative_words = [
     "dị ứng",
     "hôi",
     "lừa",
-    "fake"
+    "fake",
+    "1 sao",
+    "lỗi"
 ]
 
 # ==========================
@@ -60,6 +65,34 @@ negative_words = [
 def sentiment_label(text):
 
     text = str(text).lower()
+
+    # Xử lý phủ định
+    negative_patterns = [
+        "không tốt",
+        "không đẹp",
+        "không ổn",
+        "không thích",
+        "không hợp",
+        "không hiệu quả",
+        "không đáng tiền",
+        "chẳng tốt",
+        "chẳng đẹp",
+        "chẳng thích"
+    ]
+
+    positive_patterns = [
+        "không tệ",
+        "không xấu",
+        "không chán"
+    ]
+
+    for pattern in positive_patterns:
+        if pattern in text:
+            return "Positive"
+
+    for pattern in negative_patterns:
+        if pattern in text:
+            return "Negative"
 
     pos = 0
     neg = 0
@@ -90,6 +123,16 @@ df["sentiment"] = df["text"].apply(
 )
 
 # ==========================
+# Thống kê
+# ==========================
+
+print("\n===== PHÂN BỐ NHÃN =====")
+
+print(
+    df["sentiment"].value_counts()
+)
+
+# ==========================
 # Lưu file
 # ==========================
 
@@ -99,9 +142,4 @@ df.to_csv(
     encoding="utf-8-sig"
 )
 
-print("Đã tạo Sentiment_Labeled.csv")
-
-print(
-    df["sentiment"]
-    .value_counts()
-)
+print("\nĐã tạo Sentiment_Labeled.csv thành công!")
